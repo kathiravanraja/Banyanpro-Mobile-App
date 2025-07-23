@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BanyanPro Learning Platform</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 390px;
+            margin: 0 auto;
+            background: #f8fafc;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .screen-transition {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Common Header Styles */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn, .hamburger-menu {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .back-btn:hover, .hamburger-menu:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: #f8fafc;
+            border-radius: 24px 24px 0 0;
+            margin-top: -12px;
+            position: relative;
+            z-index: 3;
+            min-height: calc(100vh - 140px);
+            padding: 24px 0;
+        }
+
+        /* Cards and Components */
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 20px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 0 20px 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #f1f5f9;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.25);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            opacity: 0.9;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 390px;
+            background: white;
+            border-radius: 24px 24px 0 0;
+            padding: 16px 20px 32px;
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.1);
+            border-top: 1px solid #f1f5f9;
+            z-index: 1000;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 8px 16px;
+            border-radius: 12px;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea20, #764ba220);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .nav-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-label {
+            color: #667eea;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #64748b;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 360px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .stat-number {
+                font-size: 24px;
+            }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 2000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .toast.error {
+            background: #ef4444;
+        }
+
+        .toast.warning {
+            background: #f59e0b;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Teacher Dashboard Screen -->
+        <div id="dashboard-screen" class="screen active">
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="status-left">
+                    <span id="current-time">14:54</span>
+                    <span>💬</span>
+                    <span>🔇</span>
+                    <span>🔧</span>
+                    <span>•</span>
+                </div>
+                <div class="status-right">
+                    <span>⏰</span>
+                    <span>📶</span>
+                    <span>📞</span>
+                    <span>📶</span>
+                    <span id="battery-level">🔋 85</span>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="header">
+                <div class="header-content">
+                    <button class="hamburger-menu" onclick="openMenu()">☰</button>
+                    <div class="logo">BanyanPro</div>
+                    <div class="profile-section">
+                        <button class="notification-btn" onclick="showNotifications()">
+                            🔔
+                            <span class="notification-badge" id="notification-count">3</span>
+                        </button>
+                        <div class="teacher-avatar" onclick="showProfile()">T</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Welcome Section -->
+                <div class="section-title">
+                    <div class="section-icon">👋</div>
+                    Welcome back, Teacher!
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="card" onclick="navigateToScreen('class-dashboard-screen')">
+                    <h3 style="margin-bottom: 16px; color: #1e293b;">Today's Overview</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">6</div>
+                            <div class="stat-label">Homework Due</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">To Grade</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">1</div>
+                            <div class="stat-label">Classes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Students</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="section-title">
+                    <div class="section-icon">⚡</div>
+                    Quick Actions
+                </div>
+
+                <div class="card" onclick="navigateToScreen('homework-creation-screen')">
+                    <h4 style="color: #1e293b; margin-bottom: 8px;">➕ Create New Homework</h4>
+                    <p style="color: #64748b; font-size: 14px;">Add assignments for your students</p>
+                </div>
+
+                <div class="card" onclick="navigateToScreen('class-dashboard-screen')">
+                    <h4 style="color: #1e293b; margin-bottom: 8px;">📚 Manage Classes</h4>
+                    <p style="color: #64748b; font-size: 14px;">View and manage your kindergarten class</p>
+                </div>
+
+                <div class="card" onclick="showAnalytics()">
+                    <h4 style="color: #1e293b; margin-bottom: 8px;">📊 View Analytics</h4>
+                    <p style="color: #64748b; font-size: 14px;">Track student progress and performance</p>
+                </div>
+
+                <div style="height: 100px;"></div> <!-- Spacer for bottom nav -->
+            </div>
+        </div>
+
+        <!-- Class Dashboard Screen -->
+        <div id="class-dashboard-screen" class="screen">
+            <div class="status-bar">
+                <div class="status-left">
+                    <span id="current-time-2">16:54</span>
+                    <span>📞</span>
+                    <span>💬</span>
+                    <span>🔇</span>
+                    <span>⭐</span>
+                    <span>•</span>
+                </div>
+                <div class="status-right">
+                    <span>⏰</span>
+                    <span>📶</span>
+                    <span>📞</span>
+                    <span>📶</span>
+                    <span>🔋 75</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="header-content">
+                    <button class="back-btn" onclick="navigateToScreen('dashboard-screen')">←</button>
+                    <div class="header-title">Class Dashboard</div>
+                    <div>⚙️</div>
+                </div>
+                
+                <div style="text-align: center; margin: 20px 0; font-size: 16px; font-weight: 600; opacity: 0.9;">
+                    DEMO-0001-Kindergarten1
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">30</div>
+                        <div class="stat-label">Assigned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">30</div>
+                        <div class="stat-label">Pending Submission</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Pending Grading</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Graded</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="section-title">
+                    <div class="section-icon">✅</div>
+                    Homework to be Graded
+                </div>
+                
+                <div class="card" style="text-align: center;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
+                    <h3 style="color: #1e293b; margin-bottom: 8px;">All caught up!</h3>
+                    <p style="color: #64748b; font-size: 14px;">All submitted homework has been graded.</p>
+                </div>
+
+                <div class="section-title">
+                    <div class="section-icon">📝</div>
+                    Recent Homework
+                </div>
+
+                <div class="card" onclick="navigateToScreen('homework-details-screen')">
+                    <h4 style="color: #1e293b; margin-bottom: 8px;">KG Homework 1</h4>
+                    <p style="color: #64748b; font-size: 14px; margin-bottom: 12px;">வாரம் 1: வீட்டுப்பாடம் • Learning Tamil alphabets</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="background: #fee2e2; color: #dc2626; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600;">Due Today</span>
+                        <span style="color: #dc2626; font-size: 12px; font-weight: 600;">6 pending</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4 style="color: #1e293b; margin-bottom: 8px;">KG Homework 2</h4>
+                    <p style="color: #64748b; font-size: 14px; margin-bottom: 12px;">வாரம் 2: வீட்டுப்பாடம் • Basic math concepts</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600;">Due Tomorrow</span>
+                        <span style="color: #f59e0b; font-size: 12px; font-weight: 600;">4 pending</span>
+                    </div>
+                </div>
+
+                <div style="height: 100px;"></div>
+            </div>
+        </div>
+
+        <!-- Homework Details Screen -->
+        <div id="homework-details-screen" class="screen">
+            <div class="status-bar">
+                <div class="status-left">
+                    <span>16:56</span>
+                    <span>📞</span>
+                    <span>💬</span>
+                    <span>🔇</span>
+                    <span>⭐</span>
+                </div>
+                <div class="status-right">
+                    <span>⏰</span>
+                    <span>📶</span>
+                    <span>📞</span>
+                    <span>📶</span>
+                    <span>🔋 74</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="header-content">
+                    <button class="back-btn" onclick="navigateToScreen('class-dashboard-screen')">←</button>
+                    <div class="header-title">Homework Details</div>
+                    <div>📝</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="card">
+                    <h2 style="color: #1e293b; margin-bottom: 8px;">KG Homework 1</h2>
+                    <p style="color: #64748b; margin-bottom: 16px;">DEMO-0001-Kindergarten1</p>
+                    
+                    <div style="background: #f8fafc; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+                        <h4 style="color: #1e293b; margin-bottom: 12px;">வாரம் 1: வீட்டுப்பாடம்</h4>
+                        <p style="color: #475569; line-height: 1.6; margin-bottom: 12px;">
+                            • Learn Lessons 11 (ஏ), and 12(ஐ). Learn words for the letters to tell in class.
+                        </p>
+                        <p style="color: #475569; line-height: 1.6;">
+                            Learn the song- "இடி சத்தம் கேட்குதே". Memorize the song and it will be asked in weekly review.
+                        </p>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                        <span style="background: #fee2e2; color: #dc2626; padding: 8px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">📅 Due Today</span>
+                        <span style="background: #f3f4f6; color: #374151; padding: 8px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">👥 6 Students</span>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <div class="section-icon">📊</div>
+                    Submission Status
+                </div>
+
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <span style="font-weight: 600; color: #1e293b;">Submitted: 0/6</span>
+                        <span style="color: #dc2626; font-size: 14px; font-weight: 600;">All Pending</span>
+                    </div>
+                    
+                    <div style="background: #f1f5f9; height: 8px; border-radius: 4px; margin-bottom: 16px;">
+                        <div style="background: #dc2626; height: 8px; border-radius: 4px; width: 0%;"></div>
+                    </div>
+
+                    <button style="width: 100%; background: #667eea; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="showStudentList()">
+                        View Student Submissions
+                    </button>
+                </div>
+
+                <div style="height: 100px;"></div>
+            </div>
+        </div>
+
+        <!-- Homework Creation Screen -->
+        <div id="homework-creation-screen" class="screen">
+            <div class="status-bar">
+                <div class="status-left">
+                    <span>16:58</span>
+                    <span>📞</span>
+                    <span>💬</span>
+                    <span>🔇</span>
+                </div>
+                <div class="status-right">
+                    <span>⏰</span>
+                    <span>📶</span>
+                    <span>📞</span>
+                    <span>📶</span>
+                    <span>🔋 73</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="header-content">
+                    <button class="back-btn" onclick="navigateToScreen('dashboard-screen')">←</button>
+                    <div class="header-title">Create Homework</div>
+                    <div>✏️</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="card">
+                    <h3 style="color: #1e293b; margin-bottom: 20px;">New Homework Assignment</h3>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; color: #374151; font-weight: 600; margin-bottom: 8px;">Assignment Title</label>
+                        <input type="text" placeholder="e.g., KG Homework 5" style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; color: #374151; font-weight: 600; margin-bottom: 8px;">Class</label>
+                        <select style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px;">
+                            <option>DEMO-0001-Kindergarten1</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; color: #374151; font-weight: 600; margin-bottom: 8px;">Due Date</label>
+                        <input type="date" style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; color: #374151; font-weight: 600; margin-bottom: 8px;">Description (Tamil/English)</label>
+                        <textarea placeholder="Enter homework instructions..." style="width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; min-height: 120px; resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 12px;">
+                        <button style="flex: 1; background: #f3f4f6; color: #374151; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="navigateToScreen('dashboard-screen')">
+                            Cancel
+                        </button>
+                        <button style="flex: 1; background: #667eea; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="createHomework()">
+                            Create Homework
+                        </button>
+                    </div>
+                </div>
+
+                <div style="height: 100px;"></div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-items">
+                <div class="nav-item active" onclick="navigateToScreen('dashboard-screen')">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Home</div>
+                </div>
+                <div class="nav-item" onclick="navigateToScreen('class-dashboard-screen')">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-label">Classes</div>
+                </div>
+                <div class="nav-item" onclick="showStudents()">
+                    <div class="nav-icon">👥</div>
+                    <div class="nav-label">Students</div>
+                </div>
+                <div class="nav-item" onclick="showReports()">
+                    <div class="nav-icon">📈</div>
+                    <div class="nav-label">Reports</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // Application State Management
+        let currentScreen = 'dashboard-screen';
+        let appState = {
+            user: {
+                name: 'Teacher',
+                classes: ['DEMO-0001-Kindergarten1'],
+                notifications: 3
+            },
+            homework: [],
+            students: [],
+            settings: {
+                language: 'en',
+                notifications: true
+            }
+        };
+
+        // Screen Navigation System
+        function navigateToScreen(screenId) {
+            // Hide current screen
+            const currentScreenEl = document.getElementById(currentScreen);
+            if (currentScreenEl) {
+                currentScreenEl.classList.remove('active');
+            }
+
+            // Show new screen
+            const newScreenEl = document.getElementById(screenId);
+            if (newScreenEl) {
+                newScreenEl.classList.add('active');
+                currentScreen = screenId;
+                
+                // Update bottom navigation
+                updateBottomNav(screenId);
+                
+                // Update page title
+                updatePageTitle(screenId);
+                
+                // Trigger screen-specific actions
+                onScreenChange(screenId);
+            }
+        }
+
+        function updateBottomNav(activeScreen) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Set active based on screen
+            if (activeScreen === 'dashboard-screen') {
+                document.querySelector('.nav-item[onclick*="dashboard-screen"]').classList.add('active');
+            } else if (activeScreen === 'class-dashboard-screen') {
+                document.querySelector('.nav-item[onclick*="class-dashboard-screen"]').classList.add('active');
+            }
+        }
+
+        function updatePageTitle(screenId) {
+            const titles = {
+                'dashboard-screen': 'BanyanPro - Teacher Dashboard',
+                'class-dashboard-screen': 'BanyanPro - Class Dashboard',
+                'homework-details-screen': 'BanyanPro - Homework Details',
+                'homework-creation-screen': 'BanyanPro - Create Homework'
+            };
+            document.title = titles[screenId] || 'BanyanPro Learning Platform';
+        }
+
+        function onScreenChange(screenId) {
+            // Screen-specific initialization
+            switch(screenId) {
+                case 'dashboard-screen':
+                    updateDashboardStats();
+                    break;
+                case 'class-dashboard-screen':
+                    loadClassData();
+                    break;
+                case 'homework-details-screen':
+                    loadHomeworkDetails();
+                    break;
+                case 'homework-creation-screen':
+                    initializeForm();
+                    break;
+            }
+        }
+
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            
+            document.getElementById('toast-container').appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Data Loading Functions
+        function updateDashboardStats() {
+            // Simulate loading dashboard data
+            console.log('Loading dashboard statistics...');
+        }
+
+        function loadClassData() {
+            // Simulate loading class-specific data
+            console.log('Loading class dashboard data...');
+        }
+
+        function loadHomeworkDetails() {
+            // Simulate loading homework details
+            console.log('Loading homework details...');
+        }
+
+        function initializeForm() {
+            // Initialize homework creation form
+            console.log('Initializing homework creation form...');
+        }
+
+        // Feature Functions
+        function openMenu() {
+            showToast('Opening navigation menu...', 'info');
+        }
+
+        function showNotifications() {
+            showToast('3 new notifications', 'info');
+        }
+
+        function showProfile() {
+            showToast('Opening teacher profile...', 'info');
+        }
+
+        function showAnalytics() {
+            showToast('Loading analytics dashboard...', 'info');
+        }
+
+        function showStudents() {
+            showToast('Loading students section...', 'info');
+            // Navigate to teacher dashboard page
+            setTimeout(() => {
+                window.location.href = 'teacher_dashboard_revamped-2.html';
+            }, 1000);
+        }
+
+        function showReports() {
+            showToast('Loading reports section...', 'info');
+            // Navigate to homework details page
+            setTimeout(() => {
+                window.location.href = 'homework_details_revamped-3.html';
+            }, 1000);
+        }
+
+        function showStudentList() {
+            showToast('Loading student submission details...', 'info');
+        }
+
+        function createHomework() {
+            // Validate form
+            const title = document.querySelector('input[placeholder*="KG Homework"]').value;
+            const description = document.querySelector('textarea').value;
+            const dueDate = document.querySelector('input[type="date"]').value;
+
+            if (!title || !description || !dueDate) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Simulate homework creation
+            showToast('Homework created successfully!', 'success');
+            setTimeout(() => {
+                navigateToScreen('dashboard-screen');
+            }, 1500);
+        }
+
+        // Real-time Updates
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            document.querySelectorAll('[id^="current-time"]').forEach(el => {
+                el.textContent = timeString;
+            });
+        }
+
+        function updateBattery() {
+            // Simulate battery level changes
+            const levels = [85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75];
+            const randomLevel = levels[Math.floor(Math.random() * levels.length)];
+            
+            document.querySelectorAll('[id^="battery-level"]').forEach(el => {
+                el.textContent = `🔋 ${randomLevel}`;
+            });
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        navigateToScreen('dashboard-screen');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        navigateToScreen('class-dashboard-screen');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        navigateToScreen('homework-creation-screen');
+                        break;
+                    case 'h':
+                        e.preventDefault();
+                        navigateToScreen('dashboard-screen');
+                        break;
+                }
+            }
+        });
+
+        // Swipe Gestures for Mobile
+        let startX = 0;
+        let startY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+
+            // Only trigger swipe if horizontal movement is greater than vertical
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    // Swiped left - go forward
+                    handleSwipeLeft();
+                } else {
+                    // Swiped right - go back
+                    handleSwipeRight();
+                }
+            }
+        });
+
+        function handleSwipeLeft() {
+            // Navigate forward through screens
+            const screens = ['dashboard-screen', 'class-dashboard-screen', 'homework-details-screen'];
+            const currentIndex = screens.indexOf(currentScreen);
+            if (currentIndex < screens.length - 1) {
+                navigateToScreen(screens[currentIndex + 1]);
+            }
+        }
+
+        function handleSwipeRight() {
+            // Navigate backward through screens
+            const screens = ['dashboard-screen', 'class-dashboard-screen', 'homework-details-screen'];
+            const currentIndex = screens.indexOf(currentScreen);
+            if (currentIndex > 0) {
+                navigateToScreen(screens[currentIndex - 1]);
+            }
+        }
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // Local Storage for App State
+        function saveAppState() {
+            localStorage.setItem('banyanProState', JSON.stringify(appState));
+        }
+
+        function loadAppState() {
+            const saved = localStorage.getItem('banyanProState');
+            if (saved) {
+                appState = { ...appState, ...JSON.parse(saved) };
+            }
+        }
+
+        // Initialize App
+        function initializeApp() {
+            loadAppState();
+            updateTime();
+            updateBattery();
+            
+            // Update time every minute
+            setInterval(updateTime, 60000);
+            
+            // Update battery every 5 minutes
+            setInterval(updateBattery, 300000);
+            
+            // Auto-save app state every 30 seconds
+            setInterval(saveAppState, 30000);
+            
+            console.log('BanyanPro Learning Platform initialized successfully!');
+            showToast('Welcome to BanyanPro!', 'success');
+        }
+
+        // Start the app
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+        // Handle app visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                // App became visible again
+                updateTime();
+                showToast('Welcome back!', 'info');
+            } else {
+                // App became hidden
+                saveAppState();
+            }
+        });
+
+        // Handle online/offline status
+        window.addEventListener('online', () => {
+            showToast('Connection restored', 'success');
+        });
+
+        window.addEventListener('offline', () => {
+            showToast('Working offline', 'warning');
+        });
+    </script>
+</body>
+</html>
+                    

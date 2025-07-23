@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .nav-test {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #5a6fd8;
+        }
+        .description {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>BanyanPro Navigation Test</h1>
+        
+        <div class="description">
+            <h3>Navigation Flow:</h3>
+            <p><strong>1.</strong> Start at index.html (Main Dashboard)</p>
+            <p><strong>2.</strong> Click "Students" → Goes to teacher_dashboard_revamped-2.html</p>
+            <p><strong>3.</strong> Click "Reports" → Goes to homework_details_revamped-3.html</p>
+            <p><strong>4.</strong> Click "Back" → Returns to teacher_dashboard_revamped-2.html</p>
+            <p><strong>5.</strong> Click "Menu" → Returns to index.html</p>
+        </div>
+
+        <div class="nav-test">
+            <button onclick="window.location.href='index.html'">Go to Main Dashboard</button>
+        </div>
+        
+        <div class="nav-test">
+            <button onclick="window.location.href='teacher_dashboard_revamped-2.html'">Go to Teacher Dashboard</button>
+        </div>
+        
+        <div class="nav-test">
+            <button onclick="window.location.href='homework_details_revamped-3.html'">Go to Homework Details</button>
+        </div>
+
+        <h3>Implementation Summary:</h3>
+        <ul>
+            <li><strong>index.html:</strong> Updated showStudents() and showReports() functions to navigate to respective pages</li>
+            <li><strong>teacher_dashboard_revamped-2.html:</strong> Updated openMenu() to go back to index.html and goToReports() to go to homework details</li>
+            <li><strong>homework_details_revamped-3.html:</strong> Updated goBack() function to return to teacher dashboard</li>
+        </ul>
+    </div>
+</body>
+</html>

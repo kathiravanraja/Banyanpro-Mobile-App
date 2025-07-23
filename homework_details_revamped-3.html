@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BanyanPro Homework Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 390px;
+            margin: 0 auto;
+            background: #f8fafc;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-2px);
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-action-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .header-action-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.25);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            opacity: 0.9;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: #f8fafc;
+            border-radius: 24px 24px 0 0;
+            margin-top: -12px;
+            position: relative;
+            z-index: 3;
+            min-height: calc(100vh - 200px);
+            padding: 24px 0;
+        }
+
+        /* Homework Summary Card */
+        .homework-summary {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin: 0 20px 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid #667eea;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .homework-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea20, #764ba220);
+            border-radius: 0 20px 0 80px;
+        }
+
+        .homework-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .homework-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .homework-class {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .homework-due-badge {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .homework-content {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .homework-description {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .tamil-text {
+            font-family: 'Noto Sans Tamil', sans-serif;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .read-more-btn {
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .read-more-btn:hover {
+            gap: 8px;
+            color: #5a67d8;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            padding: 0 20px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .progress-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #f1f5f9;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .progress-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .progress-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #dc2626;
+        }
+
+        .progress-bar {
+            background: #f1f5f9;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #dc2626, #f87171);
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-action {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .progress-action:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+
+        .tab-container {
+            display: flex;
+            background: white;
+            border-radius: 16px;
+            padding: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            border: 1px solid #f1f5f9;
+        }
+
+        .tab-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            color: #64748b;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Student Lists */
+        .tab-content {
+            display: none;
+            padding: 0 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .student-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .student-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #f1f5f9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-color: #667eea;
+        }
+
+        .student-card.pending {
+            border-left: 4px solid #dc2626;
+            background: linear-gradient(90deg, #fee2e2, white);
+        }
+
+        .student-card.submitted {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(90deg, #dcfce7, white);
+        }
+
+        .student-card.graded {
+            border-left: 4px solid #667eea;
+            background: linear-gradient(90deg, #e0e7ff, white);
+        }
+
+        .student-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .student-avatar.pending {
+            background: linear-gradient(135deg, #dc2626, #f87171);
+        }
+
+        .student-avatar.submitted {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .student-avatar.graded {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .student-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-submitted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-graded {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .student-meta {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .student-chevron {
+            color: #cbd5e1;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .student-card:hover .student-chevron {
+            color: #667eea;
+            transform: translateX(4px);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 0 20px;
+            margin-bottom: 24px;
+        }
+
+        .action-btn {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #64748b;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .action-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .action-label {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .student-card {
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        .student-card:nth-child(1) { animation-delay: 0.1s; }
+        .student-card:nth-child(2) { animation-delay: 0.2s; }
+        .student-card:nth-child(3) { animation-delay: 0.3s; }
+        .student-card:nth-child(4) { animation-delay: 0.4s; }
+        .student-card:nth-child(5) { animation-delay: 0.5s; }
+        .student-card:nth-child(6) { animation-delay: 0.6s; }
+
+        /* Responsive Design */
+        @media (max-width: 360px) {
+            .stats-overview {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .stat-number {
+                font-size: 24px;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #64748b;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span>17:58</span>
+                <span>🔇</span>
+                <span>📺</span>
+                <span>⭐</span>
+                <span>🎨</span>
+                <span>•</span>
+            </div>
+            <div class="status-right">
+                <span>⏰</span>
+                <span>📶</span>
+                <span>📞</span>
+                <span>📶</span>
+                <span>🔋 71</span>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <button class="back-btn" onclick="goBack()">←</button>
+                <div class="header-title">BanyanPro</div>
+                <div class="header-actions">
+                    <button class="header-action-btn" onclick="shareHomework()">📤</button>
+                    <button class="header-action-btn" onclick="editHomework()">✏️</button>
+                </div>
+            </div>
+            
+            <div class="stats-overview">
+                <div class="stat-card" onclick="filterAssigned()">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Assigned</div>
+                </div>
+                <div class="stat-card" onclick="filterTurnedIn()">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Turned In</div>
+                </div>
+                <div class="stat-card" onclick="filterGraded()">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Graded</div>
+                </div>
+                <div class="stat-card" onclick="filterPending()">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Homework Summary -->
+            <div class="homework-summary">
+                <div class="homework-header">
+                    <div>
+                        <div class="homework-title">KG Homework 1</div>
+                        <div class="homework-class">DEMO-0001-Kindergarten1</div>
+                    </div>
+                    <div class="homework-due-badge">Due Today</div>
+                </div>
+                
+                <div class="homework-content">
+                    <div class="tamil-text">வாரம் 1: வீட்டுப்பாடம்:</div>
+                    <div class="homework-description">
+                        • Learn Lessons 11 (ஏ), and 12(ஐ). Learn words for the letters to tell in class.<br><br>
+                        Learn the song- "இடி சத்தம் கேட்குதே". Memorize the song and it will be asked in weekly review.
+                    </div>
+                </div>
+                
+                <a href="#" class="read-more-btn" onclick="showFullDetails()">
+                    View Full Assignment →
+                </a>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="action-btn" onclick="sendReminder()">
+                    <span class="action-icon">📢</span>
+                    <span class="action-label">Send Reminder</span>
+                </button>
+                <button class="action-btn" onclick="extendDeadline()">
+                    <span class="action-icon">📅</span>
+                    <span class="action-label">Extend Deadline</span>
+                </button>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="section-title">
+                    <div class="section-icon">📊</div>
+                    Submission Progress
+                </div>
+                
+                <div class="progress-card">
+                    <div class="progress-stats">
+                        <div>
+                            <div class="progress-number">0/6</div>
+                            <div class="progress-label">Students Submitted</div>
+                        </div>
+                        <div class="progress-status">
+                            <span>⚠️</span>
+                            <span>All Pending</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%;"></div>
+                    </div>
+                    
+                    <button class="progress-action" onclick="viewDetailedProgress()">
+                        View Detailed Progress Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <div class="tab-container">
+                    <button class="tab-btn" onclick="showTab('turnedin')">Turned In</button>
+                    <button class="tab-btn" onclick="showTab('graded')">Graded</button>
+                    <button class="tab-btn" onclick="showTab('returned')">Returned</button>
+                    <button class="tab-btn active" onclick="showTab('pending')">Pending</button>
+                </div>
+            </div>
+
+            <!-- Turned In Tab -->
+            <div id="turnedin-content" class="tab-content">
+                <div class="student-list">
+                    <div style="text-align: center; padding: 40px 20px; color: #64748b;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+                        <h3 style="color: #475569; margin-bottom: 8px;">No submissions yet</h3>
+                        <p style="font-size: 14px; line-height: 1.5;">Student submissions will appear here once they turn in their homework.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graded Tab -->
+            <div id="graded-content" class="tab-content">
+                <div class="student-list">
+                    <div style="text-align: center; padding: 40px 20px; color: #64748b;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                        <h3 style="color: #475569; margin-bottom: 8px;">No graded work yet</h3>
+                        <p style="font-size: 14px; line-height: 1.5;">Graded assignments will be displayed here after review.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Returned Tab -->
+            <div id="returned-content" class="tab-content">
+                <div class="student-list">
+                    <div style="text-align: center; padding: 40px 20px; color: #64748b;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📤</div>
+                        <h3 style="color: #475569; margin-bottom: 8px;">No returned work</h3>
+                        <p style="font-size: 14px; line-height: 1.5;">Homework requiring revisions will appear here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Tab -->
+            <div id="pending-content" class="tab-content active">
+                <div class="student-list">
+                    <div class="student-card pending" onclick="viewStudentWork('student1')">
+                        <div class="student-avatar pending">K</div>
+                        <div class="student-info">
+                            <div class="student-name">Kgstudent DM</div>
+                            <div class="student-status">
+                                <span class="status-badge status-pending">Pending</span>
+                                <span class="student-meta">Due in 2 hours</span>
+                            </div>
+                        </div>
+                        <div class="student-chevron">›</div>
+                    </div>
+                    
+                    <div class="student-card pending" onclick="viewStudentWork('student2')">
+                        <div class="student-avatar pending">K1</div>
+                        <div class="student-info">
+                            <div class="student-name">KgStudent1 DM</div>
+                            <div class="student-status">
+                                <span class="status-badge status-pending">Pending</span>
+                                <span class="student-meta">Due in 2 hours</span>
+                            </div>
+                        </div>
+                        <div class="student-chevron">›</div>
+                    </div>
+                    
+                    <div class="student-card pending" onclick="viewStudentWork('student3')">
+                        <div class="student-avatar pending">K2</div>
+                        <div class="student-info">
+                            <div class="student-name">KgStudent2 DM</div>
+                            <div class="student-status">
+                                <span class="status-badge status-pending">Pending</span>
+                                <span class="student-meta">Due in 2 hours</span>
+                            </div>
+                        </div>
+                        <div class="student-chevron">›</div>
+                    </div>
+                    
+                    <div class="student-card pending" onclick="viewStudentWork('student4')">
+                        <div class="student-avatar pending">K4</div>
+                        <div class="student-info">
+                            <div class="student-name">KgStudent4 DM</div>
+                            <div class="student-status">
+                                <span class="status-badge status-pending">Pending</span>
+                                <span class="student-meta">Due in 2 hours</span>
+                            </div>
+                        </div>
+                        <div class="student-chevron">›</div>
+                    </div>
+                    
+                    <div class="student-card pending" onclick="viewStudentWork('student5')">
+                        <div class="student-avatar pending">KG</div>
+                        <div class="student-info">
+                            <div class="student-name">Kindergarten Student kg</div>
+                            <div class="student-status">
+                                <span class="status-badge status-pending">Pending</span>
+                                <span class="student-meta">Due in 2 hours</span>
+                            </div>
+                        </div>
+                        <div class="student-chevron">›</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="height: 80px;"></div> <!-- Spacer -->
+        </div>
+    </div>
+
+    <script>
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            const targetContent = document.getElementById(tabName + '-content');
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Navigation Functions
+        function goBack() {
+            // Navigate back to teacher dashboard
+            window.location.href = 'teacher_dashboard_revamped-2.html';
+        }
+    </script>
+</body>
+</html>
